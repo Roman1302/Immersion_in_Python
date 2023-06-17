@@ -2,6 +2,8 @@
 на отдельные операции — функции. Дополнительно сохраняйте
 все операции поступления и снятия средств в список.'''
 import sys
+import datetime
+
 
 print("Программа Банкомат")
 
@@ -18,13 +20,18 @@ class card:
     MINIMUM_COMMISSION = 30
     MAXIMUM_COMMISSION = 600
 
+def write_to_logfile(information):
+    temp_string = str(datetime.datetime.now()) + " " + str(card.SUM) + " " +  information + "\n"
+    with open('log.txt', 'a', encoding="utf-8") as f:
+        f.write(temp_string)
 
 def replenishment():
     money = int(input('Введите сумму пополнения, кратную 50: '))
     if money % card.MULTIPLICITY_REPLENISHMENT == 0:
         card.SUM += money
         print(f'Вы пополнили счет на {round(money, 2)} у.е. ')
-        card.ACTION += 1.
+        card.ACTION += 1
+        write_to_logfile("пополнение")
     else:
         print('Сумма пополнения не кратно 50 у.е.')
 
@@ -32,6 +39,7 @@ def replenishment():
 def bonus():
     bonus_sum = card.SUM * card.DIVIDENDS
     card.SUM += card.SUM * card.DIVIDENDS
+    write_to_logfile("Начислен бонус")
     print(f'начислен бонус {round(bonus_sum, 2)} y.e.')
 
 
@@ -50,6 +58,7 @@ def withdrawal():
             card.SUM = card.SUM - money - rate
             print(f'Вы сняли со счета {round(money, 2)} y.e. и проценты за снятие {round(rate, 2)} у.е.')
             card.ACTION += 1
+            write_to_logfile("Снятие")
     else:
         print('Сумма снятия не кратна 50.')
 
@@ -62,7 +71,7 @@ while True:
         card.SUM -= TAX
         print(
             f'С вас списали налог на богатство в размере {round(TAX, 2)} y.e. Сумма на счёте {round(card.SUM, 2)} y.e.')
-
+        write_to_logfile("Списан налог на богатство")
     if operation == 1:
         replenishment()
     if operation == 2:
