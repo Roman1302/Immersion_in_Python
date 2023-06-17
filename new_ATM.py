@@ -21,7 +21,7 @@ class card:
     MAXIMUM_COMMISSION = 600
 
 def write_to_logfile(information):
-    temp_string = str(datetime.datetime.now()) + " " + str(card.SUM) + " " +  information + "\n"
+    temp_string = str(datetime.datetime.now()) + " " + str(round(card.SUM, 2)) + " " +  information + "\n"
     with open('log.txt', 'a', encoding="utf-8") as f:
         f.write(temp_string)
 
@@ -78,6 +78,7 @@ while True:
         withdrawal()
     if operation == 3:
         print(f'Сумма на счёте {round(card.SUM, 2)} y.e.')
+        write_to_logfile("--------------ЗАВЕРШЕНИЕ ОБСЛУЖИВАНИЯ------------")
         sys.exit()
 
     if card.ACTION % card.NUMBER_OPERATIONS == 0:
